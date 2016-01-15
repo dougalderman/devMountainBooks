@@ -1,9 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-
-var books = ['Dune', 'Grapes of Wrath', '1984'];
+var booksCtrl = require('./controllers/books_controller');
 
 var app = express();
+
 
 // 1.
 // always parse http body as JSON
@@ -14,34 +14,25 @@ app.use(bodyParser.json());
 // must be a http GET method
 // if path === '/books'
 // then run the callback function
-app.get('/books', function(req, res, next) {
-    res.send(books);
-});
+/* app.get('/books', function(req, res, next) {
+    res.send(books); */
+app.get('/books', booksCtrl.index);
+
 
 // 3.
 // must be a http POST method
 // if path === '/books'
 // then run the callback function
-app.post('/books', function(req, res, next) { // request, response, next
-    console.log(req.body);
-    books.push(req.body.name);
-    res.send(books);
-});
+app.post('/books', booksCtrl.build);
+
 
 // 4. 
 // must be a http PUT method
-app.put('/books', function(req, res, next) {
-    var newPosition = req.body.position;
-    books[newPosition] = req.body.newName;
-    res.send(books);
-});
+app.put('/books', booksCtrl.update);
 
 // 5. 
 // must be a http DELETE method
-app.delete('/books/:id', function(req, res, next) {
-    books.splice(req.params.id, 1);
-    res.send(books);
-});
+app.delete('/books/:id', booksCtrl.destroy);
 
 
 var port = 3000;
